@@ -117,12 +117,17 @@ from source.data.data_split import get_data_split
 from source.data.util import flatten
 
 def lda_acc(x_test, y_test, x_train, y_train, positions):
+    scaler = StandardScaler()
+    scaler = scaler.fit(x_train)
+    x_train = scaler.transform(x_train)
+    x_test = scaler.transform(x_test)
+
     # Create an LDA classifier
     lda = LDA()
     lda.fit(x_train, y_train.ravel())
     y_pred = lda.predict(x_test)
     accuracy = accuracy_score(y_test.ravel(), y_pred)
-    print(f"Grasp: {positions}, Accuracy:, {accuracy}")
+    #print(f"Grasp: {positions}, Accuracy:, {accuracy}")
     return accuracy
 
 

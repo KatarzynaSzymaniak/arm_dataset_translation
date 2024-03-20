@@ -69,27 +69,54 @@ def run_trial_preprocess(trials_no, data_dict, y_dict,
 
         slide = Windower()
         slide.slide_window(temp_x, temp_y, "hudgins_feats", trial_key=i, position=y_dict[i]['position'],
-                           segment_size=256, step=100, rootdir=temp_dir, if_offset_corr=True)
+                segment_size=256, step=100, rootdir=temp_dir, if_offset_corr=True)
 
 
 
 def main():
     cwd = os.getcwd()
     components = cwd.split(os.sep)[:-2]
-    project_path = os.sep.join(components)
-    print('project path', project_path)
+    project_path = cwd #.sep.join(components)
+    print('project path', cwd)
+    for i in range(1,11): #sub
+        #if i < 9:
+        #    continue
+        for day in range(1,3): # 2 days
+            #if day == 2:
+            #    continue
+            for block in range(1,3): # 2 blocks
+                sub_prime = 'participant_' + str(i)
+                sub = 'participant' + str(i)+'_'
+                d = 'day'+str(day) + '_block' + str(block)
 
-    # 1. Load data - one subject
-    p1 = os.path.join(project_path, r"data\participant_5\participant5_day1_block1\emg_raw.hdf5")
-    p1_label = os.path.join(project_path, r"data\participant_5\participant5_day1_block1\trials.csv")
-    trials_keys, data = get_data(p1)
-    lbls_dict = get_trial_pos_grasp(p1_label)
+                read_path = os.path.join(r"data", sub_prime, str(sub+d))
+                print('rr', read_path)
 
-    # 2. Slide window and process the data.
-    save_dir = os.path.join(project_path, r"processed_data\hudgins256_100\participant_5\block1_nonotch")
-    trials_no = 150  # lbls_dict.keys().__len__()-> throws error for 151 trials (last trial being empty)
-    run_trial_preprocess(trials_no, data, lbls_dict, _dir=save_dir)
+                # 1. Load data - one subject
+                p1 = os.path.join(project_path, read_path, "emg_raw.hdf5")
+                p1_label = os.path.join(project_path, read_path, "trials.csv")
+                trials_keys, data = get_data(p1)
+                lbls_dict = get_trial_pos_grasp(p1_label)
 
+                # 2. Slide window and process the data.
+                save_dir = os.path.join(project_path, "processed_data","hudgins256_100", sub_prime, d)
+                print('save dir:', save_dir)
+                trials_no = 150  # lbls_dict.keys().__len__()-> throws error for 151 trials (last trial being empty)
+                run_trial_preprocess(trials_no, data, lbls_dict, _dir=save_dir)
+
+    # ----- RUN SEPARATELY ------------
+    # # 1. Load data - one subject
+    # p1 = os.path.join(project_path, r"C:\Users\44784\PycharmProjects\arm_translation_dataset\data\participant_1\participant1_day1_block1\emg_raw.hdf5")
+    # p1_label = os.path.join(project_path, r"C:\Users\44784\PycharmProjects\arm_translation_dataset\data\participant_1\participant1_day1_block1\trials.csv")
+    # trials_keys, data = get_data(p1)
+    # print('trials_keys', trials_keys)
+    # lbls_dict = get_trial_pos_grasp(p1_label)
+    #
+    # # 2. Slide window and process the data.
+    # save_dir = os.path.join(project_path, "processed_data\hudgins256_100\participant_2\participant2_day1_block1" )
+    # print('save dir:', save_dir)
+    # trials_no = 150  # lbls_dict.keys().__len__()-> throws error for 151 trials (last trial being empty)
+    # # run_trial_preprocess(trials_no, data, lbls_dict, _dir=save_dir)
 
 if __name__ == "__main__":
     main()

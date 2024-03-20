@@ -29,7 +29,7 @@ class Windower():
         id1 = id1[:-diff]
 
         # apply notch filter
-        # x = self.notch_filter(x)
+        x = self.notch_filter(x)
 
         if if_norm is True:
             x = self.norm_rec(x)

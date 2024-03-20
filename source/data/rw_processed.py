@@ -11,7 +11,7 @@ from source.data.dataIO import DataReadWrite as dataIO
 from source.data.util import flatten
 
 NO_TRIALS = 5
-
+#TODO remove this function
 def merge_data(file_list, if_position=False):
     # Initialize an empty list to store the arrays
     arrays, lbls = [], []
@@ -63,7 +63,7 @@ def make_participants_dirs(process_parent_dir):
             # check_dir(_path)
             dataIO().check_dir_exist(_path)
 
-
+#TODO remove this function
 def save_processed_data_info(position, mean, std, train_trials, test_trials, fname):
     # save mean, std
     # train test split (based on trials) for that position
@@ -89,6 +89,7 @@ def get_files_list(args, positions, file_extension='.npy', merged_files_only=Fal
                     for dir_sub in dirr_positions]
         data_sub = natsorted(flatten(data_sub))  # make sure if only one position taken, the array is flatten
         # print('data sub', data_sub)
+        # TODO remove this :
         if merged_files_only is True:
             lbl_elem = np.array([elem for elem in data_sub if elem.split('\\')[-1] == str('merged.npy')])
         else:
@@ -125,14 +126,6 @@ def write_all_data_paths(args, positions, files_extension='.npy', file_path=None
 
 
 
-def get_position_lbl(files_list):
-    # this function has to be customized for this work.
-    arr = []
-    for i in range(len(files_list)):
-        temp = int(files_list[i].split('\\')[-2].split('_')[1])
-        arr.append(temp)
-    return arr
-
 
 def get_grasp_list(dir_list, grasp_lbl):
     filtered_files = []
@@ -145,10 +138,20 @@ def get_grasp_list(dir_list, grasp_lbl):
             filtered_files.append(file)
     return filtered_files
 
+#
+# def get_lbls(files):
+#     lbls = []
+#     for file in files:
+#         temp_lbl = file.split('\\')[-1].split('_')[-2]
+#         lbls.append(temp_lbl)
+#     return flatten(lbls)
 
-def get_lbls(files):
-    lbls = []
-    for file in files:
-        temp_lbl = file.split('\\')[-1].split('_')[-2]
-        lbls.append(temp_lbl)
-    return flatten(lbls)
+
+#
+# def get_position_lbl(files_list):
+#     # this function has to be customized for this work.
+#     arr = []
+#     for i in range(len(files_list)):
+#         temp = int(files_list[i].split('\\')[-2].split('_')[1])
+#         arr.append(temp)
+#     return arr

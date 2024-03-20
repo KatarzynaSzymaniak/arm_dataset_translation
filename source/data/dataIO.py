@@ -1,4 +1,6 @@
 import os
+import sys
+sys.path.append(os.getcwd())
 import pandas as pd
 from glob2 import glob
 from natsort import natsorted
@@ -49,7 +51,7 @@ class DataReadWrite:
         if os.path.exists(dir):
             return True
         else:
-            raise FileNotFoundError
+            raise FileNotFoundError(f'Cant find {dir}')
 
     def check_dir_exist(self, path):
         """
@@ -59,6 +61,7 @@ class DataReadWrite:
 
         isExist = os.path.exists(path)
         if not isExist:
+            #os.chmod(path, 0o777)
             os.makedirs(path)
             print("The new directory is created!")
 
