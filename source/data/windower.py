@@ -48,9 +48,9 @@ class Windower():
             class_labels.append(temp_lbl)
 
             # Save data
-            save_path = str(int(trial_key))+'_'+str(counter)+'_'+str(int(temp_lbl))+'_'+str(int(position))
-            save_path_spec = os.path.join(rootdir, save_path)
-            self.write_in(save_path_spec,'.npy', feats)
+            # save_path = str(int(trial_key))+'_'+str(counter)+'_'+str(int(temp_lbl))+'_'+str(int(position))
+            # save_path_spec = os.path.join(rootdir, save_path)
+            # self.write_in(save_path_spec,'.npy', feats)
 
             print(j, begin, end, idx1, idx2, feats.shape)
             counter += 1

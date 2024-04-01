@@ -1,3 +1,5 @@
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -159,11 +161,25 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-/source
-/Iris
-/arm_venv
-/iris_env
-/data
-/IrisResults
-/my-project-env
-/processed_data
+
+
+#############################################################
+
+# Personalised .gitignore for Python project Im working on
+
+#############################################################
+
+
+
+Iris/
+iris_env/
+IrisResults/
+my-project-env/
+data/
+processed_data/
+arm_venv/
+
+
+results_positionclassifier/
+results/
+source/

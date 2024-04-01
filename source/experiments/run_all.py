@@ -19,6 +19,7 @@ import csv
 import timeit
 from source.data.read_raw import get_subdirs
 from source.data.dataIO import DataReadWrite as dataIO
+
 def get_configparser():
     with open('config.yaml', 'r') as file:
         config = yaml.safe_load(file)
