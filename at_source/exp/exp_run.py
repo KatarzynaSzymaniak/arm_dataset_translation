@@ -95,7 +95,7 @@ def run_exp(exp_config, data_config, sub_dir, exp_fn=naive_tl, exp_name='tl_+con
     df.to_csv(exp_name, index=False)
 
     mean_std = df.groupby(['source', 'target'])['mean'].agg(['mean', 'std'])
-    mean_std.to_csv('subs_meanstd_'+exp_name, index=True)
+    mean_std.to_csv('subs_meanstd_'+ exp_name, index=True)
     print(mean_std)
             
                     
