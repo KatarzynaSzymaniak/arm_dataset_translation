@@ -23,3 +23,8 @@ def lda_acc(x_test, y_test, x_train, y_train, positions=None):
     accuracy = accuracy_score(y_test.ravel(), y_pred)
     #print(f"Grasp: {positions}, Accuracy:, {accuracy}")
     return accuracy
+
+def lda_model(x_train, y_train):
+    lda = LDA()
+    lda.fit(x_train, y_train)
+    return lda

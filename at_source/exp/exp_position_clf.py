@@ -212,16 +212,24 @@ def main():
     exp_config = get_configs(exp_config_path)
 
     #  -----------------  CONFIG + -----------------
-    #TODO: exp_fn=None
-    data_config_path = os.path.join(root, 'at_source', 'configs', '+.yaml')
-    data_config = get_configs(data_config_path)
+    # #TODO: exp_fn=None
+    # data_config_path = os.path.join(root, 'at_source', 'configs', '+.yaml')
+    # data_config = get_configs(data_config_path)
 
-    exp_name = 'pos_clf_+config.csv'
-    exp_dir = None
-    run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5)
+    # exp_name = 'pos_clf_+config.csv'
+    # exp_dir = None
+    # run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5)
 
     #TODO: need to run it for both classifiers. 
     # Also, the acc seems to be a bit higher than what I calculated previously. Need to check that.
+    #  -----------------  CONFIG + -----------------
+    #TODO: exp_fn=None
+    data_config_path = os.path.join(root, 'at_source', 'configs', 'x.yaml')
+    data_config = get_configs(data_config_path)
+
+    exp_name = 'pos_clf_xconfig.csv'
+    exp_dir = None
+    run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5)
 
 if __name__ == '__main__':
     main()
