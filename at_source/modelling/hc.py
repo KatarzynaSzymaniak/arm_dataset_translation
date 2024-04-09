@@ -28,42 +28,37 @@ def clf_2lvl_acc(x_test, y_test, z_train, x_train, y_train, z_test):
 
 
 
-def h_clf_acc(x_test, y_test, z_train, x_train, y_train, z_test):
+def h_clf_acc(x_test, y_test, z_test, x_train, y_train, z_train):
     
     # ---------- Norm Data ----------
     x_train, x_test = z_score(x_train, x_test)
 
-
     # ---------- TRAINING ----------
     # FIT x to the first encoder
     lda1 = lda_model(x_train, z_train) 
-    ######## ----------------------------
-    # am I doing it on all positions or according to the configurations?
-    # if its for configurations I need to vecotrize the positions.
-    ######## ----------------------------
-    # x_transformed = lda1.transform(x_train)
     z_prime_train = lda1.predict(x_train)
+    print('acc train lvl 1:', accuracy_score(z_train, z_prime_train))
+    # Apply min-max normalization
+    z_prime_train_norm = (z_prime_train - np.min(z_prime_train)) / (np.max(z_prime_train) - np.min(z_prime_train))
 
     # FIT the second encoder
     _dict = group_by(z_train)
-    x_transformed = np.concatenate((x_train, z_prime_train.reshape(-1, 1)), axis=1)
+    x_transformed = np.concatenate((x_train, z_prime_train_norm.reshape(-1, 1)), axis=1)
     lvl2_models = fit_level2(_dict, x_transformed, y_train)
-
-
 
     # ---------- TESTING ----------
     z_prime_test = lda1.predict(x_test)
-    xtest_transformed = np.concatenate((x_test, z_prime_test.reshape(-1, 1)), axis=1)
-    predict_lvl1 = lda1.predict(x_test)  # predict the position
-    test_dict = group_by(predict_lvl1)  # group data based on the prediction label  
-    predict_lvl2 = predict_level2(predict_lvl1, lvl2_models, test_dict, xtest_transformed, y_test, z_test)
-    
-    return predict_lvl2
+    z_prime_test_norm = (z_prime_test - np.min(z_prime_test)) / (np.max(z_prime_test) - np.min(z_prime_test))
+    xtest_transformed = np.concatenate((x_test, z_prime_test_norm.reshape(-1, 1)), axis=1)
+    # predict_lvl1 = lda1.predict(x_test)  # predict the position
+    test_dict = group_by(z_prime_test)  # group data based on the prediction label  
+    predict_lvl2 = predict_level2(z_prime_test, lvl2_models, test_dict, xtest_transformed, y_test, z_test)
+    z_acc = accuracy_score(z_test, z_prime_test)
+    return np.append(predict_lvl2, z_acc)
 
 
 
-
-def fit_level2(_dict, x_transformed, y, z):
+def fit_level2(_dict, x_transformed, y):
     for z_key, _ in _dict.items():
         idx = np.array(_dict[z_key])
         # print('IDX:', idx.shape, type(idx[0]))
@@ -152,13 +147,13 @@ def predict_level2(pred_pos, lvl2_models, pred_dict, xtest_transformed, y_test, 
 
 
 def group_by(y):
-    pos = np.unique(y)[0]
+    pos = np.unique(y)
     temp_dict = {}
     for p in pos:
         temp_dict[p] = np.where(y == p)[0]
     return temp_dict
 
-def multilbl_eval(pred_pos, final_pred, z_test, y_test, mode='naive'):
+def multilbl_eval(pred_pos, final_pred, z_test, y_test, mode='naive'): #'naive'
     temp_score = 0
 
     if mode == 'naive':

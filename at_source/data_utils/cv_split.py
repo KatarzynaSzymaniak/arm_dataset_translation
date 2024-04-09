@@ -39,8 +39,8 @@ def trials_split(unique_mappings, k_folds=5):
     b = skf.split(unique_mappings[:,0], unique_mappings[:,1])
     fold_dict = {}
     for fold, (train_ids, test_ids) in enumerate(b):
-        print(f'FOLD {fold}')
-        print('-------------')
+        # print(f'FOLD {fold}')
+        # print('-------------')
         fold_dict[fold] = {'train_ids': train_ids.tolist(), 'test_ids': test_ids.tolist()}
         # print('fold trials', fold_dict[fold])
     return fold_dict

@@ -15,15 +15,15 @@ from at_source.modelling.hc import *
 
 def run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5):
     
-
     # sub_name = os.path.basename(s)
     results = []
     for s in exp_config['subs']:
         temp_s = os.path.join(sub_dir, 'participant_'+s)
-        # load data from all positions
 
-        pos_folddict = make_pos_folds_dict(data_config, temp_s)
-
+        (data_cross_config, data_diag_config) = data_config 
+        pos_folddict = make_pos_folds_dict(data_diag_config, temp_s)
+        poscross_folddict = make_pos_folds_dict(data_cross_config, temp_s)
+        pos_folddict.update(poscross_folddict) # pos 5 will be overwritten by pos 5 in cross config
         
         # RUN EXP in FOLDS
         acc_tbl = []
@@ -31,15 +31,20 @@ def run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5):
             d_train_all = None
             
 
-            for pos in data_config['pos']:
-                y1, y2, d1, d2 = load_pos_data(temp_s, data_config, pos)
+            for pos in range(1,10): #data_config['pos']:
+                
                 # load fold trials for the position
                 fold80_trials, fold20_trials = get_fold_trials(pos_folddict[pos]['trial_mappings'], 
                                                                 pos_folddict[pos]['fold_dict'], fold=fold)
                 
                 # get data from the fold of a position
+                if pos in data_diag_config['pos']:
+                    y1, y2, d1, d2 = load_pos_data(temp_s, data_diag_config, pos)
+                else:
+                    y1, y2, d1, d2 = load_pos_data(temp_s, data_cross_config, pos)
                 d_train, y_train = get_fold_dataa(fold80_trials[:,0], y1, y2, d1, d2)
                 d_test, y_test = get_fold_dataa(fold20_trials[:,0], y1, y2, d1, d2)
+
 
                 # --------------------- TODO ---------------------
                 # AGGREGATE THEM ALL
@@ -62,18 +67,17 @@ def run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5):
                             y_train_all[:,2], 
                             y_train_all[:,3])
                     
-                              
+            print('Subject:', s, 'Fold:', fold, 'Acc:', acc)                  
             acc_tbl.append(acc)
-            print('Subject:', s, 'Fold:', fold, 'Acc:', acc)
-        mean = np.mean(np.array(acc_tbl))
-        # run the position clf for every grasp 
-        results.append({'subject':s, 'grasp': grasp, 'acc': acc_tbl, 'mean': mean, 'fold': fold})
+            
+        mean = np.mean(np.array(acc_tbl), axis=0) # mean acc across the folds for each position
+        for i, m in enumerate(mean):
+            results.append({'subject': s, 'acc': acc_tbl, 'pos': i+1, 'mean_acc': m})
 
     df = pd.DataFrame(results)    
-    df.to_csv(exp_name, index=False)
-
-    mean_std = df.groupby(['grasp'])['mean'].agg(['mean', 'std'])
-    mean_std.to_csv('subs_meanstd_'+exp_name, index=True)
+    df.to_csv(exp_name, index=False)  
+    mean_pos_mean_std = df.groupby(['pos'])['mean_acc'].agg(['mean', 'std'])
+    mean_pos_mean_std.to_csv('mean_pos_meanstd_'+exp_name, index=True)
 
 
 
@@ -96,25 +100,21 @@ def main():
     exp_config_path = os.path.join(root, 'at_source', 'configs', 'exp_TL_config.yaml')	
     exp_config = get_configs(exp_config_path)
 
-    #  -----------------  CONFIG + -----------------
-    # #TODO: exp_fn=None
-    # data_config_path = os.path.join(root, 'at_source', 'configs', '+.yaml')
-    # data_config = get_configs(data_config_path)
+    #  -----------------  DATA CONFIG -----------------
+    data_crossconfig_path = os.path.join(root, 'at_source', 'configs', '+.yaml')
+    data_crossconfig = get_configs(data_crossconfig_path)
 
-    # exp_name = 'pos_clf_+config.csv'
-    # exp_dir = None
-    # run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5)
 
-    #TODO: need to run it for both classifiers. 
-    # Also, the acc seems to be a bit higher than what I calculated previously. Need to check that.
-    #  -----------------  CONFIG + -----------------
-    #TODO: exp_fn=None
     data_config_path = os.path.join(root, 'at_source', 'configs', 'x.yaml')
-    data_config = get_configs(data_config_path)
-
-    exp_name = 'pos_clf_xconfig.csv'
+    data_diagconfig = get_configs(data_config_path)
+    
+    #  -----------------  RUN EXP. -----------------
+    exp_name = 'naive_hmc_exp.csv'
     exp_dir = None
-    run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5)
+    run_exp((data_crossconfig, data_diagconfig), exp_name, sub_dir, exp_config, exp_dir, folds = 5)
+
+
+
 
 if __name__ == '__main__':
     main()

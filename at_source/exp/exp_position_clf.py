@@ -9,8 +9,6 @@ from at_source.modelling.hc import *
 from at_source.data_utils.utils import *
 from at_source.configs.utils import get_configs
 import pandas as pd
-# pos = '2'
-# positions = None
 
 
 def position_clf(x_train, x_test, z_train, z_test):
@@ -163,47 +161,6 @@ def make_pos_folds_dict(data_config, temp_s):
 
 
 
-'''
-
-def run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5):
-    
-    # sub_name = os.path.basename(s)
-    for s in exp_config['subs']:
-        temp_s = os.path.join(sub_dir, 'participant_'+s)
-        # load data from all positions
-        for grasp in range(1, 7):
-            for pos in data_config['pos']:
-                
-                y1, y2, d1, d2 = load_pos_data(temp_s, data_config, pos)
-                fold_dict, trial_mappings = get_fold_dict(y1, y2)
-
-
-                for fold in range(folds):
-
-                    unique_temp_y = pos # make sure is an int
-
-                    # load fold settings
-                    fold80_trials, fold20_trials = get_fold_trials(trial_mappings, fold_dict, fold=fold)
-                    d_train, y_train = get_fold_dataa(fold80_trials[:,0], y1, y2, d1, d2)
-
-                    # get only the data from a single grasp
-                    mask = np.where(y_train[:, 2] == grasp)
-                    d_train_grasp = d_train[mask]
-                    y_train_grasp = y_train[mask]
-
-
-
-
-        # run the position clf
-
-        position_clf(d_train_grasp, x_test, y_train_grasp, z_test)
-
-
-        
-
-
-'''
-
 def main():
 
     root = os.getcwd()
@@ -214,30 +171,22 @@ def main():
     exp_config = get_configs(exp_config_path)
 
     # #  -----------------  CONFIG + -----------------
-    # #TODO: exp_fn=None
-    # data_config_path = os.path.join(root, 'at_source', 'configs', '+.yaml')
-    # data_config = get_configs(data_config_path)
+    data_config_path = os.path.join(root, 'at_source', 'configs', '+.yaml')
+    data_config = get_configs(data_config_path)
 
-    # exp_name = 'pos_clf_+config.csv'
-    # exp_dir = None
-    # run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5)
-
-    #TODO: need to run it for both classifiers. 
-    # Also, the acc seems to be a bit higher than what I calculated previously. Need to check that.
-
-    # #  -----------------  CONFIG x -----------------
-    #TODO: exp_fn=None
-    # data_config_path = os.path.join(root, 'at_source', 'configs', 'x.yaml')
-    # data_config = get_configs(data_config_path)
-
-    # exp_name = 'pos_clf_xconfig.csv'
-    # exp_dir = None
-    # run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5)
+    exp_name = 'pos_clf_+config.csv'
+    exp_dir = None
+    run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5)
 
 
-    # load csv
-    df = pd.read_csv('pos_clf_+config.csv')
-    mean_std = df.groupby(['grasp'])['mean'].agg(['mean', 'std'])
-    print(mean_std)
+    #  -----------------  CONFIG x -----------------
+    data_config_path = os.path.join(root, 'at_source', 'configs', 'x.yaml')
+    data_config = get_configs(data_config_path)
+
+    exp_name = 'pos_clf_xconfig.csv'
+    exp_dir = None
+    run_exp(data_config, exp_name, sub_dir, exp_config, exp_dir, folds = 5)
+
+
 if __name__ == '__main__':
     main()
