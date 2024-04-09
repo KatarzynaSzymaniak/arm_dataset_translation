@@ -41,7 +41,7 @@ def h_clf_acc(x_test, y_test, z_train, x_train, y_train, z_test):
     # am I doing it on all positions or according to the configurations?
     # if its for configurations I need to vecotrize the positions.
     ######## ----------------------------
-    x_transformed = lda1.transform(x_train)
+    # x_transformed = lda1.transform(x_train)
     z_prime_train = lda1.predict(x_train)
 
     # FIT the second encoder

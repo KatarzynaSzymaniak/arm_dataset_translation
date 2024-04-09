@@ -19,8 +19,9 @@ def naive_tl(x_test, y_test, x_train, y_train):
     return acc
 
 
-def h_clf(x_test, y_test, x_train, y_train):
-    acc = h_clf_acc(x_test, y_test, x_train, y_train)
+def h_clf(x_test, y_test, z_train, x_train, y_train, z_test):
+    acc = h_clf_acc(x_test, y_test, z_train, x_train, y_train, z_test)
+    
     return acc
 
 
@@ -102,6 +103,11 @@ def run_exp(exp_config, data_config, sub_dir, exp_fn=naive_tl, exp_name='tl_+con
 
 
 def main():
+    #  -----------------  Experiment Functions -----------------
+    # Choose what experiment do you want to run
+    exp_fn1 = 'naive_tl'
+    exp_fn2 = 'h_clf'
+
     root = os.getcwd()
     sub_dir = os.path.join(root, 'at_source', 'processed_data')
 
@@ -112,12 +118,12 @@ def main():
     #  -----------------  CONFIG + -----------------
     data_config_path = os.path.join(root, 'at_source', 'configs', '+.yaml')
     data_config = get_configs(data_config_path)
-    run_exp(exp_config, data_config, sub_dir, exp_fn=naive_tl, exp_name='tl_+config.csv')
+    run_exp(exp_config, data_config, sub_dir, exp_fn=exp_fn2, exp_name='hc_+config.csv')
 
     #  -----------------  CONFIG x -----------------
     x_data_config_path = os.path.join(root, 'at_source', 'configs', 'x.yaml')
     x_data_config = get_configs(x_data_config_path)
-    run_exp(exp_config, x_data_config, sub_dir, exp_fn=naive_tl, exp_name='tl_xconfig.csv')
+    run_exp(exp_config, x_data_config, sub_dir, exp_fn=exp_fn2, exp_name='hc_xconfig.csv')
 
 
 
