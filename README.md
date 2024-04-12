@@ -1,4 +1,5 @@
-# Repository including benchmarking and initial analysis of the dataset from paper: It’s GREAT: Gesture REcognition for Arm Translation.
+# Repository including benchmarking and initial analysis of the dataset from paper: 
+## It’s GREAT: Gesture REcognition for Arm Translation.
 
 
 ### Get venv
