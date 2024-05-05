@@ -1,15 +1,14 @@
-# Repository including benchmarking and initial analysis of the dataset from paper: 
 ## It’s GREAT: Gesture REcognition for Arm Translation.
 
+Myoelectric control has emerged as a promising approach for a wide range of applications, including controlling limb prosthetics, teleoperating robots and enabling immersive interactions in the metaverse. However, the accuracy and robustness of MEC systems are often affected by various factors, including muscle fatigue, perspiration, drifts in electrode positions and changes in arm position. The latter has received less attention despite its significant impact on signal quality and decoding accuracy. To address this gap, we present GREAT, a novel dataset of surface electromyographic (EMG) signals captured from multiple arm positions. This dataset, comprising EMG and hand kinematics data from 8 participants performing 6 different hand gestures, provides a comprehensive resource for investigating position-invariant Myoelectric control decoding algorithms. We envision this dataset to serve as a valuable resource for both training and benchmarking arm position-invariant Myoelectric control algorithms. Additionally, to further expand the publicly available data capturing the variability of EMG signals across diverse arm positions, we propose a novel data acquisition protocol that can be utilized for future data collection.
 
-### Get venv
+Data collection protocol: https://github.com/MoveR-Digital-Health-and-Care-Hub/posture_dataset_collection 
 
-    cd arm_dataset_translation/iris_env/bin
-    source activate
-    /arm_dataset_translation/iris_env/bin$ pip --version
-    pip 20.0.2 from /home/iris/arm_dataset_translation/data/env/lib/python3.8/site-packages/pip (python 3.8)
+#### Repository includes benchmarking and initial analysis of the dataset from paper.
+ In the at_source/exp you will find the example runs of the experiemnt. 
 
-#### Venv Packages included:
+
+##### Venv Packages included:
     Package                  Version   
     ------------------------ ----------
     cmake                    3.27.0    
